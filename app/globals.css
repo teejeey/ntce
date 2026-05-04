@@ -71,7 +71,7 @@ a {
 }
 
 .brand-logo {
-  height: 66px;
+  height: 100px;
   width: auto;
   object-fit: contain;
 }
@@ -1331,7 +1331,8 @@ h2 {
   }
 }
 
-@media (max-width: 640px) {
+/* Hamburger + collapsed nav from 1015px down (was bundled with 640px-only block). */
+@media (max-width: 1015px) {
   .navbar {
     position: relative;
     flex-wrap: wrap;
@@ -1411,7 +1412,9 @@ h2 {
   .navbar.menu-open .nav-links {
     display: flex;
   }
+}
 
+@media (max-width: 640px) {
   .hero {
     min-height: 66vh;
   }

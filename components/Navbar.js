@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /** Warm the App Router cache so first clicks feel instant (especially over ngrok). */
 const PREFETCH_HREFS = [
@@ -33,6 +33,19 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handlePointerDown(event) {
+      const el = navRef.current;
+      if (el && !el.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [open]);
 
   useEffect(() => {
     for (const href of PREFETCH_HREFS) {
@@ -45,9 +58,12 @@ export default function Navbar() {
   }, [router]);
 
   return (
-    <nav className={`navbar container ${open ? "menu-open" : ""}`}>
+    <nav
+      ref={navRef}
+      className={`navbar container ${open ? "menu-open" : ""}`}
+    >
       <Link className="brand" href="/">
-        <img className="brand-logo" src="/logo1.jpg" alt="NTCE logo" loading="lazy" />
+        <img className="brand-logo" src="/logo.png" alt="NTCE logo" loading="lazy" />
       </Link>
 
       <button

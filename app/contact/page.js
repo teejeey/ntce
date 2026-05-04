@@ -26,10 +26,10 @@ export default function ContactPage() {
               <h3>Email</h3>
               <p>ntce@bt.bt</p>
             </article>
-            <article className="sponsor-item">
+            {/* <article className="sponsor-item">
               <h3>Phone</h3>
               <p>+975 2 123 456</p>
-            </article>
+            </article> */}
             <article className="sponsor-item">
               <h3>Address</h3>
               <p>Thimphu, Bhutan</p>

@@ -42,9 +42,9 @@ export default function ContactFloat() {
               <p>
                 <strong>Email:</strong> ntce@bt.bt
               </p>
-              <p>
+              {/* <p>
                 <strong>Phone:</strong> +975 2 123 456
-              </p>
+              </p> */}
               <p>
                 <strong>Address:</strong> Thimphu, Bhutan
               </p>
