@@ -1,8 +1,8 @@
 import { handlePostRegistration } from "../../../lib/server/controllers/registrationController";
 import { emptyWithCors } from "../../../lib/server/http/apiResponse";
 
-/** POST must be dynamic; `force-static` breaks registration locally and can cause 500s. */
-export const dynamic = "force-dynamic";
+/** Static export build compatibility; frontend uses Render API when exported. */
+export const dynamic = "force-static";
 
 export async function OPTIONS(request) {
   return emptyWithCors(request);
