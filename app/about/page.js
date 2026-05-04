@@ -11,7 +11,7 @@ export default function AboutPage() {
       />
 
       <main className="inner-main">
-        <section className="container sponsors-page">
+        <section className="container sponsors-page about-main">
           <div className="form-intro">
             <p className="section-tag">Overview</p>
             <h2>About NTCE 2026</h2>
@@ -47,26 +47,72 @@ export default function AboutPage() {
 
           <h2>What to Expect</h2>
 
-          <h3>1. Inaugural Programme</h3>
-          <p>
-            The event begins with a formal inaugural ceremony attended by distinguished
-            dignitaries, including government leaders and industry executives. The programme
-            includes traditional ceremonies, keynote addresses, and the official opening of the
-            exhibition.
-          </p>
+          <div className="about-expect-block">
+            <h3 className="about-expect-heading">
+              <span className="about-expect-num">1.</span>
+              <span className="about-expect-title">Inaugural Programme</span>
+            </h3>
+            <p>
+              The event begins with a formal inaugural ceremony attended by distinguished
+              dignitaries, including government leaders and industry executives. The programme
+              includes traditional ceremonies, keynote addresses, and the official opening of the
+              exhibition.
+            </p>
+          </div>
 
-          <h3>2. Conference &amp; Knowledge Sharing</h3>
-          <p>
-            The expo will host conference sessions and paper presentations where experts,
-            policymakers, and industry leaders share insights on emerging technologies, digital
-            policies, and Bhutan&apos;s future digital roadmap.
-          </p>
+          <div className="about-expect-block">
+            <h3 className="about-expect-heading">
+              <span className="about-expect-num">2.</span>
+              <span className="about-expect-title">Conference &amp; Knowledge Sharing</span>
+            </h3>
+            <p>
+              The expo will host conference sessions and paper presentations where experts,
+              policymakers, and industry leaders share insights on emerging technologies, digital
+              policies, and Bhutan&apos;s future digital roadmap.
+            </p>
+          </div>
 
-          <h3>3. World Information Society Day (WISD)</h3>
-          <p>
-            On 17 May, NTCE aligns with World Information Society Day, reinforcing Bhutan&apos;s
-            commitment to inclusive digital growth and global connectivity standards.
-          </p>
+          <div className="about-expect-block">
+            <h3 className="about-expect-heading">
+              <span className="about-expect-num">3.</span>
+              <span className="about-expect-title">Panel Discussion</span>
+            </h3>
+            <p>
+              NTCE 2026 includes a dedicated panel discussion bringing together key institutions to
+              explore resilience and inclusion in Bhutan&apos;s telecom ecosystem.
+            </p>
+            <p>
+              <strong>Theme:</strong> &ldquo;Telecom Lifelines: Building Resilient and Inclusive
+              Networks in Bhutan&rdquo;
+            </p>
+            <p>
+              <strong>Date:</strong> 16th May, 2026
+            </p>
+            <p>
+              <strong>Tentative panel members:</strong>
+            </p>
+            <ul className="footer-links">
+              <li>BICMA</li>
+              <li>BTL</li>
+              <li>TICPL</li>
+              <li>GovTech</li>
+              <li>BPC</li>
+            </ul>
+            <p>
+              <strong>Moderator:</strong> Ms. Kimberly D. Johns, World Bank
+            </p>
+          </div>
+
+          <div className="about-expect-block">
+            <h3 className="about-expect-heading">
+              <span className="about-expect-num">4.</span>
+              <span className="about-expect-title">World Information Society Day (WISD)</span>
+            </h3>
+            <p>
+              On 17 May, NTCE aligns with World Information Society Day, reinforcing Bhutan&apos;s
+              commitment to inclusive digital growth and global connectivity standards.
+            </p>
+          </div>
 
           <h2>Why NTCE Matters</h2>
           <p>

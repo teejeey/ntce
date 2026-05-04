@@ -5,6 +5,7 @@ import {
   checkEmailExistsViaGas,
   submitRegistrationViaGas,
 } from "../lib/gasWebApp";
+import { REGISTRATION_ATTENDANCE_OPTIONS } from "../lib/registrationAttendanceOptions";
 import { COMPLETE_EMAIL_PATTERN } from "../lib/emailPatterns";
 import { REGISTRATION_TOPIC_OPTIONS } from "../lib/registrationTopicOptions";
 
@@ -18,7 +19,8 @@ const initialForm = {
   mobileNumber: "",
   organization: "",
   designation: "",
-  topicInterest: "",
+  attendance: "",
+  topicInterest: [],
   message: "",
 };
 
@@ -36,8 +38,19 @@ export default function RegistrationForm() {
   latestTrimmedEmailRef.current = emailTrimmed;
 
   function onChange(event) {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = event.target;
+    setFormData((prev) => {
+      if (name === "attendance" && value !== "Selected Session") {
+        return { ...prev, attendance: value, topicInterest: [] };
+      }
+      if (name === "topicInterest" && type === "checkbox") {
+        const set = new Set(prev.topicInterest);
+        if (checked) set.add(value);
+        else set.delete(value);
+        return { ...prev, topicInterest: Array.from(set) };
+      }
+      return { ...prev, [name]: value };
+    });
     if (name === "email") {
       setEmailCheck({ checking: false, error: "" });
     }
@@ -110,6 +123,23 @@ export default function RegistrationForm() {
 
   async function onSubmit(event) {
     event.preventDefault();
+    if (!formData.attendance) {
+      setStatus({
+        type: "error",
+        message: "Please choose attendance.",
+      });
+      return;
+    }
+    if (
+      formData.attendance === "Selected Session" &&
+      (!Array.isArray(formData.topicInterest) || formData.topicInterest.length === 0)
+    ) {
+      setStatus({
+        type: "error",
+        message: "Please select at least one topic interest.",
+      });
+      return;
+    }
     if (emailCheck.checking || emailCheck.error) {
       if (emailCheck.error) setStatus({ type: "error", message: emailCheck.error });
       return;
@@ -123,7 +153,13 @@ export default function RegistrationForm() {
     setStatus({ type: "", message: "" });
 
     try {
-      const result = await submitRegistrationViaGas(formData);
+      const result = await submitRegistrationViaGas({
+        ...formData,
+        topicInterest:
+          formData.attendance === "Selected Session"
+            ? formData.topicInterest
+            : [],
+      });
 
       if (!result.ok) {
         throw new Error(result.error || "Failed to submit registration.");
@@ -222,23 +258,42 @@ export default function RegistrationForm() {
         />
       </label>
       <label>
-        Topic Interest
+        Attendance
         <select
-          name="topicInterest"
-          value={formData.topicInterest}
+          name="attendance"
+          value={formData.attendance}
           onChange={onChange}
           required
         >
           <option value="" disabled>
-            Choose interest field
+            Select attendance
           </option>
-          {REGISTRATION_TOPIC_OPTIONS.map((topic) => (
-            <option key={topic} value={topic}>
-              {topic}
+          {REGISTRATION_ATTENDANCE_OPTIONS.map((attendance) => (
+            <option key={attendance} value={attendance}>
+              {attendance}
             </option>
           ))}
         </select>
       </label>
+      {formData.attendance === "Selected Session" ? (
+        <div className="register-topic-group">
+          <p className="register-topic-label">Topic Interest (Selected Session)</p>
+          <div className="registration-checkbox-grid">
+            {REGISTRATION_TOPIC_OPTIONS.map((topic) => (
+              <label key={topic} className="registration-checkbox-item">
+                <input
+                  type="checkbox"
+                  name="topicInterest"
+                  value={topic}
+                  checked={formData.topicInterest.includes(topic)}
+                  onChange={onChange}
+                />
+                <span>{topic}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      ) : null}
       <label>
         Message
         <textarea
@@ -278,16 +333,35 @@ export default function RegistrationForm() {
       </form>
 
       {showPreview ? (
-        <div className="preview-modal-backdrop" role="presentation">
+        <div
+          className="preview-modal-backdrop"
+          role="presentation"
+          onClick={(event) => {
+            if (submitting) return;
+            if (event.target === event.currentTarget) setShowPreview(false);
+          }}
+        >
           <div
             className="preview-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="preview-title"
+            onClick={(event) => event.stopPropagation()}
           >
-            <p id="preview-title" className="section-tag">
-              Preview your details
-            </p>
+            <header className="preview-modal-header">
+              <p id="preview-title" className="section-tag preview-modal-title">
+                Preview your details
+              </p>
+              <button
+                type="button"
+                className="preview-modal-close"
+                onClick={() => setShowPreview(false)}
+                disabled={submitting}
+                aria-label="Close preview"
+              >
+                ×
+              </button>
+            </header>
             <div className="form-preview-grid">
               <p>
                 <strong>Full Name:</strong> {formData.fullName}
@@ -305,7 +379,23 @@ export default function RegistrationForm() {
                 <strong>Designation:</strong> {formData.designation}
               </p>
               <p>
-                <strong>Topic Interest:</strong> {formData.topicInterest}
+                <strong>Attendance:</strong> {formData.attendance}
+              </p>
+              <p>
+                <strong>Topic Interest:</strong>{" "}
+                {formData.attendance === "Selected Session" &&
+                formData.topicInterest.length > 0 ? (
+                  <>
+                    <br />
+                    <ol>
+                      {formData.topicInterest.map((topic, index) => (
+                        <li key={`${topic}-${index}`}>{topic}</li>
+                      ))}
+                    </ol>
+                  </>
+                ) : (
+                  "-"
+                )}
               </p>
               <p>
                 <strong>Message:</strong> {formData.message || "-"}

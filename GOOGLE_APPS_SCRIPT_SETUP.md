@@ -12,7 +12,9 @@ Use this to store registration submissions and serve schedule, events, and speak
   - `Mobile number`
   - `Organization`
   - `Designation`
+  - `Attendance`
   - `Topic_interest`
+  - `Topic_interest_array`
   - `message`
   - `Timestamp`
 
@@ -111,13 +113,15 @@ function doPost(e) {
     const mobileNumber = data["Mobile number"] || "";
     const organization = data.Organization || "";
     const designation = data.Designation || "";
+    const attendance = data.Attendance || "";
     const topicInterest = data.Topic_interest || "";
+    const topicInterestArray = data.Topic_interest_array || "[]";
     const message = data.message || "";
 
-    if (!fullName || !email || !mobileNumber || !organization || !designation || !topicInterest) {
+    if (!fullName || !email || !mobileNumber || !organization || !designation || !attendance) {
       return jsonResponse({
         success: false,
-        error: "Full Name, Email, Mobile number, Organization, Designation, and Topic_interest are required."
+        error: "Full Name, Email, Mobile number, Organization, Designation, and Attendance are required."
       });
     }
 
@@ -127,7 +131,9 @@ function doPost(e) {
       mobileNumber,
       organization,
       designation,
+      attendance,
       topicInterest,
+      topicInterestArray,
       message,
       new Date()
     ]);

@@ -71,7 +71,7 @@ a {
 }
 
 .brand-logo {
-  height: 100px;
+  height: 150px;
   width: auto;
   object-fit: contain;
 }
@@ -694,6 +694,41 @@ h2 {
   color: #1e293b;
 }
 
+.register-topic-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.register-topic-label {
+  margin: 0;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.registration-checkbox-grid {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.registration-checkbox-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.55rem;
+  /* font-weight: 400; */
+  color: #1e293b;
+}
+
+.registration-checkbox-item input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+}
+
+.registration-checkbox-item span {
+  display: block;
+}
+
 .register-form input,
 .register-form select,
 .register-form textarea {
@@ -768,6 +803,11 @@ h2 {
   color: #334155;
 }
 
+.form-preview-grid ol {
+  margin: 0.35rem 0 0 1.25rem;
+  padding-left: 0.8rem;
+}
+
 .form-preview-actions {
   display: flex;
   gap: 0.6rem;
@@ -790,6 +830,42 @@ h2 {
   border: 1px solid #dbe4f8;
   padding: 1rem;
   box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+}
+
+.preview-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.preview-modal-title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.preview-modal-close {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.15rem 0.35rem;
+  cursor: pointer;
+  color: #64748b;
+  border-radius: 6px;
+}
+
+.preview-modal-close:hover:not(:disabled) {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.preview-modal-close:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .registration-success-modal .success-modal-heading {
@@ -837,6 +913,55 @@ h2 {
 
 .sponsors-page {
   padding: 4.5rem 0;
+}
+
+/* About page: indent bullet lists one step from body text */
+.about-main ul.footer-links {
+  margin-left: 1.5rem;
+  padding-left: 0.5rem;
+}
+
+/* What to Expect (1–4): number in column 1; title + all body text in column 2 (align with title) */
+.about-main .about-expect-block {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.45rem;
+  row-gap: 0.45rem;
+  margin-bottom: 1.15rem;
+}
+
+.about-main .about-expect-heading {
+  display: contents;
+}
+
+.about-main .about-expect-num,
+.about-main .about-expect-title {
+  font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.about-main .about-expect-num {
+  grid-column: 1;
+  padding-top: 0.12rem;
+}
+
+.about-main .about-expect-title {
+  grid-column: 2;
+}
+
+.about-main .about-expect-block > p,
+.about-main .about-expect-block > ul.footer-links {
+  grid-column: 2;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.about-main .about-expect-block > ul.footer-links {
+  padding-left: 1.1rem;
+  list-style-position: outside;
 }
 
 .sponsor-tabs {

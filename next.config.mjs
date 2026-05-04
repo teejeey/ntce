@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const isStaticExport = process.env.NEXT_EXPORT === "1";
+
 const nextConfig = {
   /**
    * Hostnames allowed to load dev-only assets (`/_next/webpack-hmr`, etc.) cross-origin.
@@ -14,13 +16,14 @@ const nextConfig = {
   ],
   devIndicators: false,
 
-  // output: "standalone",
+  ...(isStaticExport ? { output: "export", trailingSlash: true } : {}),
   images: {
     unoptimized: true,
   },
   env: {
     NEXT_PUBLIC_GAS_WEB_APP_URL:
       process.env.NEXT_PUBLIC_GAS_WEB_APP_URL || process.env.GAS_WEB_APP_URL || "",
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "",
   },
 };
 

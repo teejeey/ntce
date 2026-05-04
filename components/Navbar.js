@@ -63,7 +63,7 @@ export default function Navbar() {
       className={`navbar container ${open ? "menu-open" : ""}`}
     >
       <Link className="brand" href="/">
-        <img className="brand-logo" src="/logo.png" alt="NTCE logo" loading="lazy" />
+        <img className="brand-logo" src="/logo1.png" alt="NTCE logo" loading="lazy" />
       </Link>
 
       <button
