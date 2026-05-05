@@ -1,8 +1,8 @@
 import { handlePostRegistration } from "../../../lib/server/controllers/registrationController";
 import { emptyWithCors } from "../../../lib/server/http/apiResponse";
 
-/** Static export build compatibility; frontend uses Render API when exported. */
-export const dynamic = "force-static";
+/** Must stay dynamic for form submissions at runtime. */
+export const dynamic = "force-dynamic";
 
 export async function OPTIONS(request) {
   return emptyWithCors(request);

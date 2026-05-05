@@ -1,73 +1,211 @@
+"use client";
+
 import Footer from "../../components/Footer";
 import PageHero from "../../components/PageHero";
 
-const conferenceByCompany = [
-
+// Conference Schedule Day 1 (same columns as schedule sheet: id, time_slot, description, speaker)
+const CONFERENCE_DAY1 = [
   {
-    slNo: 1,
-    organization: "Ericsson",
-    topics: [
-      "From Connectivity to Capability: Transforming Societies through Next-Gen Networks & Infrastructure Innovation Strategies",
-      "Living in the Future: How Digital Technologies Will Transform Everyday Life, Work, and Society",
-    ],
-    speakers: ["Dr. Ir. Ng Thiaw Seng", "Mr. Ravi Shekhar Pandey"],
+    id: 1,
+    time_slot: "11:20 - 11:25 AM",
+    description: "Session Chair",
+    speaker:
+      "Choining Tshomo (Assistant ICT,Gov Tech Agency)",
   },
   {
-    slNo: 2,
-    organization: "Ciena & Teleindia Networks",
-    topics: ["Data center scaling evolution", "Distributed AI and inference deployment"],
-    speakers: ["Mr.Asish Kumar", "Mr.Mahanthesha Kestur Adaviswamy"],
+    id: 2,
+    time_slot: "11:25 - 12:10 PM",
+    description:
+      "From connectivity to capability: How Next-Gen networks will transform society and economies Infrastructure innovation strategies",
+    speaker: "Mr.Ng Thiaw Seng, Ercisson",
   },
   {
-    slNo: 3,
-    organization: "Tejas Networks",
-    topics: [
-      "IMT-2030 / 6G: Latest Updates from ITU and 3GPP Standards",
-      "Operationalizing AI/ML for Next-Generation Wireless Networks",
-    ],
-    speakers: ["Mr.Jishnu Aravindakshan", "Dr.Shantigram Jagannath"],
-  },
-  
-  {
-    slNo: 4,
-    organization: "Cisco",
-    topics: [
-      "Cybersecurity as a Governance and Policy Imperative: Beyond IT",
-      "Accelerating AI Deployments in Network Ecosystems",
-    ],
-    speakers: ["Mr.Diplmalya", "____________________"],
-  },
-  
-  {
-    slNo: 5,
-    organization: "Nokia",
-    topics: [
-      "Trustworthy Networks for Mission-Critical Applications in Public Safety and Disaster Management",
-    ],
-    speakers: ["____________________"],
-  },
-  
-  {
-    slNo: 6,
-    organization: "NDI",
-    topics: ["Deployment of Bhutan NDI, its privacy-preserving architecture and existing use cases"],
-    speakers: ["Mr.Kinzang Dorji "],
+    id: 3,
+    time_slot: "12:10 - 12:15 PM",
+    description: "Session Chair",
+    speaker: "Dawa (Assistant ICT, Gov Tech Agency)",
   },
   {
-    slNo: 7,
-    organization: "GovTech",
-    topics: ["Satellite and Emerging Digital Projects"],
-    speakers: ["____________________"],
+    id: 4,
+    time_slot: "12:15 - 01:00 PM",
+    description: "Data center scaling evolution",
+    speaker: "Mr.Asish Kumar - Cienna",
   },
   {
-    slNo: 8,
-    organization: "DHI",
-    topics: ["DHI"],
-    speakers: ["____________________"],
+    id: 5,
+    time_slot: "01:00 - 02:00 PM",
+    description: "Lunch Break",
+    speaker: "",
+  },
+  {
+    id: 6,
+    time_slot: "02:00 - 02:05 PM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 7,
+    time_slot: "02:05- 02:50 PM",
+    description:
+      "Cyber Security as a Governance and Policy Issue; Cyber Security – Much More Than a Matter of IT",
+    speaker: "Mr.Diplmalya - Wizeretch Informatis Pvt",
+  },
+  {
+    id: 8,
+    time_slot: "02:50- 02:55 PM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 9,
+    time_slot: "02:55- 03:40 PM",
+    description: "NDI decentralized architecture",
+    speaker: "Mr. Kinzang Dorji - NDI",
+  },
+  {
+    id: 10,
+    time_slot: "03:40- 04:00 PM",
+    description: "Tea Break",
+    speaker: "",
+  },
+  {
+    id: 11,
+    time_slot: "04:00- 04:05 PM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 12,
+    time_slot: "04:05 - 04:50 PM",
+    description: "IMT-2030/6G: Update from ITU and 3GPP standards",
+    speaker: "Dr.Shantigram Jagannath - Tejas Networks",
+  },
+  {
+    id: 13,
+    time_slot: "04:50 - 04:55 PM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 14,
+    time_slot: "04:55 - 05:40 PM",
+    description:
+      "Cisco Secure AI Factory - Enabling Enterprise from Data Center to Edge",
+    speaker: "Mr. Anuj Singhi - Cisco",
   },
 ];
 
-const exhibitions = [
+// Conference Schedule Day 2
+const CONFERENCE_DAY2 = [
+  {
+    id: 1,
+    time_slot: "09:00 - 09:05 AM",
+    description: "Opening session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 2,
+    time_slot: "09:05- 09:50 AM",
+    description: "Distributed AI and inference deployment",
+    speaker: "Mr.Mahanthesha Kestur Adaviswamy",
+  },
+  {
+    id: 3,
+    time_slot: "09:50 - 09:55 AM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 4,
+    time_slot: "09:55 - 10:00 AM",
+    description:
+      "Trustworthy Networks for Mission Critical Application for Public Safety, Disaster Management",
+    speaker: "Nokia",
+  },
+  {
+    id: 5,
+    time_slot: "10:00 - 10:30 AM",
+    description: "Tea Break",
+    speaker: "",
+  },
+  {
+    id: 6,
+    time_slot: "10:30- 10:35 AM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 7,
+    time_slot: "10:35 - 11:20 AM",
+    description: "Operationalizing AI/ML for wireless networks",
+    speaker: "Mr.Jishnu Aravindakshan",
+  },
+  {
+    id: 8,
+    time_slot: "11:20 - 11:25 AM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 9,
+    time_slot: "11:25 - 12:10 PM",
+    description: "InnoTech: Overview of Projects, Research, and Innovation Ecosystem",
+    speaker: "Ms.Tshering Yangzom",
+  },
+  {
+    id: 10,
+    time_slot: "12:10 - 12:15 PM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 11,
+    time_slot: "12:15 - 01:00 PM",
+    description: "Satellite and Emerging Digital Projects",
+    speaker: "To be confirmed",
+  },
+  {
+    id: 12,
+    time_slot: "01:00 - 02:00 PM",
+    description: "Lunch Break",
+    speaker: "",
+  },
+  {
+    id: 13,
+    time_slot: "02:00 - 02:05 PM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 14,
+    time_slot: "02:05 - 04:00 PM",
+    description:
+      "Panel Discussion: Telecom Lifelines: Building Resilient and Inclusive Networks in Bhutan",
+    speaker: "Moderator:Ms. Kimberly D. Johns, World Bank",
+  },
+  {
+    id: 15,
+    time_slot: "04:00 - 04:30 PM",
+    description: "Coffee Break",
+    speaker: "",
+  },
+  {
+    id: 16,
+    time_slot: "04:30 - 04:35 PM",
+    description: "Session Chair",
+    speaker: "Moderator",
+  },
+  {
+    id: 17,
+    time_slot: "04:35 - 05:20 PM",
+    description:
+      "Living in the Future: How Digital Technologies Will Transform Everyday Life, Work, and Society",
+    speaker: "Mr. Ravi Shekhar Pandey",
+  },
+];
+
+// Static exhibitions table (unchanged from previous version)
+const EXHIBITIONS = [
   {
     slNo: 1,
     organization: "Ericsson",
@@ -121,51 +259,66 @@ export default function ProgrammePage() {
       <PageHero
         eyebrow="Programme"
         title="Conference & Exhibition Programme"
-        subtitle="Speaker topics and exhibition product details"
+        subtitle="Conference schedule for Day 1 and Day 2, plus exhibition showcases"
       />
 
       <main className="inner-main">
         <section className="container sponsors-page programme-page">
           <p className="section-tag">Programme Details</p>
-          <h2>Conference Topics Table</h2>
+
+          <h2 id="conference-day-1">Conference Schedule Day 1</h2>
           <div className="programme-table-wrap">
             <table className="programme-table">
               <thead>
                 <tr>
                   <th>Sl. No.</th>
-                  <th>Organization</th>
-                  <th>Session Title</th>
+                  <th>Time Slot</th>
+                  <th>Description</th>
                   <th>Speaker</th>
                 </tr>
               </thead>
               <tbody>
-                {conferenceByCompany.map((row) => (
-                  <tr key={`conference-${row.slNo}`}>
-                    <td>{row.slNo}</td>
-                    <td>{row.organization}</td>
-                    <td>
-                      <ol className="programme-list">
-                        {row.topics.map((topic, index) => (
-                          <li key={`topic-${row.slNo}-${index}`}>{topic}</li>
-                        ))}
-                      </ol>
-                    </td>
-                    <td>
-                      <ol className="programme-list">
-                        {row.speakers.map((speaker, index) => (
-                          <li key={`speaker-${row.slNo}-${index}`}>
-                            <span className="programme-speaker-space">{speaker}</span>
-                          </li>
-                        ))}
-                      </ol>
-                    </td>
+                {CONFERENCE_DAY1.map((row) => (
+                  <tr key={`day1-${row.id}`}>
+                    <td>{row.id}</td>
+                    <td>{row.time_slot}</td>
+                    <td>{row.description}</td>
+                    <td>{row.speaker || "-"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <h2 style={{ marginTop: "1.4rem" }}>Exhibitions</h2>
+          <h2 id="conference-day-2" style={{ marginTop: "1.4rem" }}>
+            Conference Schedule Day 2
+          </h2>
+          <div className="programme-table-wrap">
+            <table className="programme-table">
+              <thead>
+                <tr>
+                  <th>Sl. No.</th>
+                  <th>Time Slot</th>
+                  <th>Description</th>
+                  <th>Speaker</th>
+                </tr>
+              </thead>
+              <tbody>
+                {CONFERENCE_DAY2.map((row) => (
+                  <tr key={`day2-${row.id}`}>
+                    <td>{row.id}</td>
+                    <td>{row.time_slot}</td>
+                    <td>{row.description}</td>
+                    <td>{row.speaker || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h2 id="exhibitions" style={{ marginTop: "1.4rem" }}>
+            Exhibitions
+          </h2>
           <div className="programme-table-wrap">
             <table className="programme-table">
               <thead>
@@ -176,7 +329,7 @@ export default function ProgrammePage() {
                 </tr>
               </thead>
               <tbody>
-                {exhibitions.map((row) => (
+                {EXHIBITIONS.map((row) => (
                   <tr key={`exhibition-${row.slNo}`}>
                     <td>{row.slNo}</td>
                     <td>{row.organization}</td>
@@ -222,3 +375,4 @@ export default function ProgrammePage() {
     </>
   );
 }
+

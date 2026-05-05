@@ -20,7 +20,7 @@ export default function HomePage() {
         subtitle="Fri, 15 May - Sun, 17 May, 2026"
       >
         <Link className="btn btn-primary" href="/register">
-          Reserve Your Seat
+          Register For Conference
         </Link>
       </PageHero>
 

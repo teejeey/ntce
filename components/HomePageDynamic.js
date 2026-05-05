@@ -2,38 +2,44 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getClientCache, setClientCache } from "../lib/clientDataCache";
 import { LIVE_DATA_REFRESH_MS } from "../lib/constants/liveData";
 import { fetchEventsFromSheet } from "../lib/events";
 import { fetchScheduleFromGas } from "../lib/gasWebApp";
 import { getDayTimeRange } from "../lib/schedule";
 import { fetchSpeakersFromSheet, speakerPortraitSrc } from "../lib/speakers";
 
+const HOME_DYNAMIC_CACHE_KEY = "home-dynamic:v1";
+
 export default function HomePageDynamic() {
-  const [newsEvents, setNewsEvents] = useState([]);
-  const [scheduleCards, setScheduleCards] = useState([
-    {
-      day: "Day 01",
-      date: "15th May, 2026",
-      title:
-        "Inauguration, Opening Ceremony & Launch of Exhibition and Conference",
-      timeRange: "",
-    },
-    {
-      day: "Day 02",
-      date: "16th May, 2026",
-      title:
-        "Exhibition Continuation, Conference Sessions and Panel Discussions",
-      timeRange: "",
-    },
-    {
-      day: "Day 03",
-      date: "17th May, 2026",
-      title:
-        "World Telecommunication and Information Society Day (WTISD) Celebration, Awards & Closing Ceremony",
-      timeRange: "",
-    },
-  ]);
-  const [speakersPreview, setSpeakersPreview] = useState([]);
+  const cached = getClientCache(HOME_DYNAMIC_CACHE_KEY) || {};
+  const [newsEvents, setNewsEvents] = useState(cached.newsEvents || []);
+  const [scheduleCards, setScheduleCards] = useState(
+    cached.scheduleCards || [
+      {
+        day: "Day 01",
+        date: "15th May, 2026",
+        title:
+          "Inauguration, Opening Ceremony & Launch of Exhibition and Conference",
+        timeRange: "",
+      },
+      {
+        day: "Day 02",
+        date: "16th May, 2026",
+        title:
+          "Exhibition Continuation, Conference Sessions and Panel Discussions",
+        timeRange: "",
+      },
+      {
+        day: "Day 03",
+        date: "17th May, 2026",
+        title:
+          "World Telecommunication and Information Society Day (WTISD) Celebration, Awards & Closing Ceremony",
+        timeRange: "",
+      },
+    ]
+  );
+  const [speakersPreview, setSpeakersPreview] = useState(cached.speakersPreview || []);
   const inFlight = useRef(false);
 
   const loadAll = useCallback(async () => {
@@ -51,8 +57,8 @@ export default function HomePageDynamic() {
         ? scheduleResult.data
         : { day1: [], day2: [], day3: [] };
 
-      setNewsEvents(eventsData.slice(0, 3));
-      setScheduleCards([
+      const nextNewsEvents = eventsData.slice(0, 3);
+      const nextScheduleCards = [
         {
           day: "Day 01",
           date: "15th May, 2026",
@@ -74,8 +80,17 @@ export default function HomePageDynamic() {
             "World Telecommunication and Information Society Day (WTISD) Celebration, Awards & Closing Ceremony",
           timeRange: getDayTimeRange(scheduleData.day3),
         },
-      ]);
-      setSpeakersPreview(allSpeakers.slice(0, 4));
+      ];
+      const nextSpeakersPreview = allSpeakers.slice(0, 4);
+
+      setNewsEvents(nextNewsEvents);
+      setScheduleCards(nextScheduleCards);
+      setSpeakersPreview(nextSpeakersPreview);
+      setClientCache(HOME_DYNAMIC_CACHE_KEY, {
+        newsEvents: nextNewsEvents,
+        scheduleCards: nextScheduleCards,
+        speakersPreview: nextSpeakersPreview,
+      });
     } finally {
       inFlight.current = false;
     }
@@ -83,8 +98,19 @@ export default function HomePageDynamic() {
 
   useEffect(() => {
     loadAll();
+    const handleFocus = () => loadAll();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") loadAll();
+    };
     const id = setInterval(() => loadAll(), LIVE_DATA_REFRESH_MS);
-    return () => clearInterval(id);
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      clearInterval(id);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [loadAll]);
 
   return (
@@ -102,16 +128,7 @@ export default function HomePageDynamic() {
                   <p className="news-date">{item.date}</p>
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
-                  {item.link ? (
-                    <a
-                      className="news-link"
-                      href={item.link}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View Details
-                    </a>
-                  ) : null}
+                  
                 </article>
               ))
             ) : (

@@ -3,23 +3,42 @@
 import { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import PageHero from "../../components/PageHero";
+import { getClientCache, setClientCache } from "../../lib/clientDataCache";
+import { LIVE_DATA_REFRESH_MS } from "../../lib/constants/liveData";
 import { fetchEventsFromSheet } from "../../lib/events";
 
+const EVENTS_CACHE_KEY = "events-page:v1";
+
 export default function EventsPage() {
-  const [events, setEvents] = useState([]);
-  const [mounted, setMounted] = useState(false);
+  const cached = getClientCache(EVENTS_CACHE_KEY);
+  const [events, setEvents] = useState(cached || []);
+  const [mounted, setMounted] = useState(Boolean(cached));
 
   useEffect(() => {
     let cancel = false;
-    (async () => {
+    const loadEvents = async () => {
       const rows = await fetchEventsFromSheet();
       if (!cancel) {
+        setClientCache(EVENTS_CACHE_KEY, rows);
         setEvents(rows);
         setMounted(true);
       }
-    })();
+    };
+
+    loadEvents();
+    const handleFocus = () => loadEvents();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") loadEvents();
+    };
+    const intervalId = setInterval(() => loadEvents(), LIVE_DATA_REFRESH_MS);
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
       cancel = true;
+      clearInterval(intervalId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 
@@ -43,16 +62,7 @@ export default function EventsPage() {
                     <p className="news-date">{item.date}</p>
                     <h3>{item.title}</h3>
                     <p>{item.description}</p>
-                    {item.link ? (
-                      <a
-                        className="news-link"
-                        href={item.link}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        View Details
-                      </a>
-                    ) : null}
+                    
                   </article>
                 ))
               ) : (

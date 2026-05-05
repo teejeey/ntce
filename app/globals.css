@@ -416,6 +416,28 @@ h2 {
   margin: 0 auto;
 }
 
+.schedule-error-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.retry-btn {
+  border: 1px solid #c7d8ff;
+  background: #f8fbff;
+  color: #1d4ed8;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  line-height: 1;
+  padding: 0.45rem 0.78rem;
+  cursor: pointer;
+}
+
+.retry-btn:hover {
+  background: #eef4ff;
+}
+
 .schedule-tabs-wrap {
   max-width: 900px;
   margin: 0 auto;
@@ -489,6 +511,70 @@ h2 {
   margin-top: 0.25rem;
   font-size: 0.82rem;
   color: #334155;
+}
+
+.schedule-inline-btn {
+  margin-top: 0.4rem;
+  padding: 0.36rem 0.68rem;
+  font-size: 0.78rem;
+  line-height: 1.1;
+  border-radius: 999px;
+}
+
+.programme-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.programme-modal {
+  width: min(1100px, 95vw);
+  max-height: 86vh;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.26);
+}
+
+.programme-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #e6ecfb;
+}
+
+.programme-modal-head h3 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.programme-modal-close {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d7e2ff;
+  border-radius: 999px;
+  background: #f8fbff;
+  color: #1e3a8a;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.programme-modal-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem 0;
+}
+
+.programme-modal-body {
+  max-height: calc(86vh - 108px);
+  overflow: auto;
+  padding: 0.7rem 1rem 1rem;
 }
 
 .speakers {
@@ -997,6 +1083,27 @@ h2 {
   color: #1e293b;
 }
 
+.programme-page h2 {
+  font-size: clamp(1.45rem, 2.2vw, 1.85rem);
+}
+
+.programme-page h2[id] {
+  scroll-margin-top: 120px;
+}
+
+.speaker-card[id] {
+  scroll-margin-top: 100px;
+}
+
+.schedule-speaker-link {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.schedule-speaker-link:hover {
+  text-decoration: none;
+}
+
 .programme-page .sponsor-page-grid {
   margin-top: 0.35rem;
 }
@@ -1034,6 +1141,27 @@ h2 {
   background: #f7faff;
   color: #1e293b;
   font-weight: 700;
+}
+
+.programme-table th:nth-child(1),
+.programme-table td:nth-child(1),
+.programme-table th:nth-child(2),
+.programme-table td:nth-child(2) {
+  text-align: center;
+}
+
+.programme-table th:nth-child(2),
+.programme-table td:nth-child(2) {
+  width: 190px;
+  min-width: 190px;
+  white-space: nowrap;
+}
+
+.programme-table th:nth-child(1),
+.programme-table td:nth-child(1) {
+  width: 84px;
+  min-width: 84px;
+  white-space: nowrap;
 }
 
 .programme-table tbody tr:last-child td {
@@ -1230,7 +1358,7 @@ h2 {
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 160px;
+  min-height: 150px;
 }
 
 .logo-item img {
@@ -1245,35 +1373,141 @@ h2 {
 } */
 
 .logo-item.tier-platinum {
-  min-height: 160px;
+  min-height: 190px;
 }
 
 .logo-item.tier-platinum img {
-  height: 72px;
+  height: 96px;
 }
 
 .logo-item.tier-gold {
-  min-height: 160px;
+  min-height: 175px;
 }
 
 .logo-item.tier-gold img {
-  height: 72px;
+  height: 84px;
 }
 
 .logo-item.tier-silver {
-  min-height: 160px;
+  min-height: 162px;
 }
 
 .logo-item.tier-silver img {
-  height: 72px;
+  height: 74px;
 }
 
 .logo-item.tier-bronze {
-  min-height: 160px;
+  min-height: 150px;
 }
 
 .logo-item.tier-bronze img {
+  height: 64px;
+}
+
+/* Keep "Supported by" and "Host" logos the same size. */
+.logo-item.tier-host {
+  min-height: 170px;
+}
+
+.logo-item.tier-host img {
+  height: 82px;
+}
+
+/* Sponsors page: balanced card layout with size hierarchy by tier */
+.sponsors-page .sponsor-page-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.sponsors-page .logo-item {
+  width: 220px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.sponsors-page .sponsor-tier-label {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #334155;
+  text-transform: uppercase;
+}
+
+.sponsors-page .logo-item.tier-host {
+  width: 360px;
+  flex-basis: 360px;
+  min-height: 190px;
+}
+
+.sponsors-page .logo-item.tier-host img {
+  height: 88px;
+}
+
+.sponsors-page .logo-item.tier-platinum {
+  width: 360px;
+  flex-basis: 360px;
+  min-height: 190px;
+}
+
+.sponsors-page .logo-item.tier-platinum img {
+  height: 118px;
+}
+
+.sponsors-page .logo-item.tier-gold {
+  width: 285px;
+  flex-basis: 285px;
+  min-height: 190px;
+}
+
+.sponsors-page .logo-item.tier-gold img {
+  height: 96px;
+}
+
+.sponsors-page .logo-item.tier-silver {
+  width: 255px;
+  flex-basis: 255px;
+  min-height: 190px;
+}
+
+.sponsors-page .logo-item.tier-silver img {
   height: 72px;
+}
+
+.sponsors-page .logo-item.tier-bronze {
+  width: 170px;
+  flex-basis: 170px;
+  min-height: 190px;
+}
+
+.sponsors-page .logo-item.tier-bronze img {
+  height: 60px;
+}
+
+.sponsors-page .section-tag,
+.sponsors-page h2,
+.sponsors-page .partner-group > h3 {
+  text-align: left;
+}
+
+.sponsors-page h3,
+.sponsors-page .partner-group > h3 {
+  width: 100%;
+  text-align: left;
+}
+
+.sponsors-page .tier-section > h4 {
+  width: auto;
+  text-align: left;
+}
+
+.sponsors-page .logo-item {
+  align-items: center;
+  text-align: center;
 }
 
 .logo-fallback {

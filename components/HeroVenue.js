@@ -7,7 +7,7 @@ export default function HeroVenue() {
         target="_blank"
         rel="noreferrer"
       >
-        View map location
+        View on Map
       </a>
     </p>
   );

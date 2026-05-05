@@ -258,7 +258,7 @@ export default function RegistrationForm() {
         />
       </label>
       <label>
-        Attendance
+        I want to attend
         <select
           name="attendance"
           value={formData.attendance}

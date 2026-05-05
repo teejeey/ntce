@@ -4,6 +4,8 @@ import { useState } from "react";
 
 export default function ContactFloat() {
   const [open, setOpen] = useState(false);
+  const whatsappUrl = "https://wa.me/97516140234";
+  const phoneUrl = "tel:+97516140234";
 
   return (
     <>
@@ -42,9 +44,18 @@ export default function ContactFloat() {
               <p>
                 <strong>Email:</strong> ntce@bt.bt
               </p>
-              {/* <p>
-                <strong>Phone:</strong> +975 2 123 456
-              </p> */}
+              <p>
+                <strong>Phone:</strong>{" "}
+                <a href={phoneUrl}>
+                  +975 16 140 234
+                </a>
+              </p>
+              <p>
+                <strong>WhatsApp:</strong>{" "}
+                <a href={whatsappUrl} target="_blank" rel="noreferrer">
+                  Chat on WhatsApp
+                </a>
+              </p>
               <p>
                 <strong>Address:</strong> Thimphu, Bhutan
               </p>

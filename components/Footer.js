@@ -21,7 +21,7 @@ export default function Footer() {
           <div className="social-icons">
             <a
               className="social-icon"
-              href="https://facebook.com"
+              href="https://www.facebook.com/share/1Cbizv5rFa/?mibextid=wwXIfr"
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
@@ -31,27 +31,27 @@ export default function Footer() {
             </a>
             <a
               className="social-icon"
-              href="https://linkedin.com"
+              href="https://www.instagram.com/ntce.bt?igsh=MWVuZm90a3IzNGR0aw=="
               target="_blank"
               rel="noreferrer"
-              aria-label="LinkedIn"
-              title="LinkedIn"
+              aria-label="Instagram"
+              title="Instagram"
             >
-              in
+              ig
             </a>
             <a
               className="social-icon"
-              href="https://x.com"
+              href="https://www.tiktok.com/@ntce_2026"
               target="_blank"
               rel="noreferrer"
-              aria-label="X (Twitter)"
-              title="X (Twitter)"
+              aria-label="TikTok"
+              title="TikTok"
             >
-              X
+              ♪
             </a>
             <a
               className="social-icon"
-              href="https://youtube.com"
+              href="https://www.youtube.com/@NTCE_2026"
               target="_blank"
               rel="noreferrer"
               aria-label="YouTube"
