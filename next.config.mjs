@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const isStaticExport = process.env.NEXT_EXPORT === "1";
+const remoteApiBase = String(process.env.NEXT_PUBLIC_API_BASE_URL || "").trim().replace(/\/+$/, "");
 
 const nextConfig = {
   /**
@@ -26,6 +27,14 @@ const nextConfig = {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "",
   },
   async headers() {
+    const connectSources = [
+      "'self'",
+      "https://script.google.com",
+      "https://script.googleusercontent.com",
+    ];
+    if (remoteApiBase) {
+      connectSources.push(remoteApiBase);
+    }
     const csp = [
       "default-src 'self'",
       "base-uri 'self'",
@@ -34,7 +43,7 @@ const nextConfig = {
       "img-src 'self' data: https:",
       "style-src 'self' 'unsafe-inline'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "connect-src 'self' https://script.google.com https://script.googleusercontent.com",
+      `connect-src ${connectSources.join(" ")}`,
       "form-action 'self'",
     ].join("; ");
 
