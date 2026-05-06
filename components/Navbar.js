@@ -21,11 +21,11 @@ const PREFETCH_HREFS = [
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/schedule", label: "Conference & Exhibitions" },
+  { href: "/schedule", label: "Programme" },
   // { href: "/programme", label: "Conference & Exhibitions" },
   { href: "/speakers", label: "Speakers" },
   { href: "/sponsors", label: "Sponsors" },
-  { href: "/events", label: "Events" },
+  { href: "/events", label: "Announcement" },
   { href: "/about", label: "About Us" },
 ];
 

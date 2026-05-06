@@ -19,7 +19,7 @@ Environment notes:
 
 | Scenario | How to trigger | HTTP | Expected `success` | Expected `data` / `error` |
 |----------|----------------|------|--------------------|---------------------------|
-| **Valid** | GAS URL set; script returns `action=schedule` payload with `day1`–`day3` | 200 | `true` | `data`: `{ "day1": [...], "day2": [...], "day3": [...] }` (arrays, possibly empty) |
+| **Valid** | GAS URL set; script returns `action=schedule` with `day1`–`day4` arrays | 200 | `true` | `data`: `{ "day1": [...], "day2": [...], "day3": [...], "day4": [...] }` (arrays, possibly empty; `day4` optional until sheet exists) |
 | **Invalid input** | N/A (no request body; no query params validated) | — | — | — |
 | **Apps Script failure** | Missing/invalid GAS URL, GAS returns `success: false`, non-2xx, or JSON error | 502 or 503 | `false` | `data`: `null`, `error`: message (e.g. not configured, or GAS error text) |
 | **Timeout** | GAS (or network) does not complete before default **12s** schedule timeout | 502 | `false` | `data`: `null`, `error`: includes *“Request timed out waiting for Google Apps Script.”* (or similar abort message) |

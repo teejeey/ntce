@@ -89,10 +89,8 @@ export default function RegistrationForm() {
     } catch (error) {
       if (error.name === "AbortError") return;
       if (latestTrimmedEmailRef.current !== email) return;
-      setEmailCheck({
-        checking: false,
-        error: error.message || "Could not verify email right now.",
-      });
+      // Transient upstream/network issues should not block form submission.
+      setEmailCheck({ checking: false, error: "" });
     }
   }, []);
 
@@ -295,7 +293,7 @@ export default function RegistrationForm() {
         </div>
       ) : null}
       <label>
-        Message
+        Remarks (Optional)
         <textarea
           rows="4"
           name="message"

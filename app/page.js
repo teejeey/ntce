@@ -43,11 +43,10 @@ export default function HomePage() {
             <p className="section-tag">About NTCE</p>
             <h2>Welcome to Bhutan&apos;s Biggest Technology Event</h2>
             <p>
-              The National Technology Conference & Exhibition (NTCE-1st Edition) 2026 is Bhutan&apos;s premier
-              platform for innovation, collaboration, and technological advancement in the digital
-              ecosystem. Jointly organized by Bhutan Telecom Ltd. and GovTech Agency, NTCE brings
-              together leaders from government, industry, and global technology providers to shape
-              the future of connectivity in Bhutan.
+              The National Technology Conference & Exhibition (NTCE) 2026 is Bhutan’s premier national platform dedicated 
+              to advancing digital transformation, innovation, and strategic collaboration across the country’s technology 
+              ecosystem. Jointly organized by Bhutan Telecom Limited and the GovTech Agency, NTCE reflects a shared national 
+              vision to accelerate Bhutan’s transition into a digitally empowered, innovation-driven, and knowledge-based economy.
             </p>
             <Link className="btn btn-outline-dark" href="/about">
               Learn More

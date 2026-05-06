@@ -55,7 +55,7 @@ export default function HomePageDynamic() {
 
       const scheduleData = scheduleResult.ok
         ? scheduleResult.data
-        : { day1: [], day2: [], day3: [] };
+        : { day1: [], day2: [], day3: [], day4: [] };
 
       const nextNewsEvents = eventsData.slice(0, 3);
       const nextScheduleCards = [

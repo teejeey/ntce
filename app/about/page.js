@@ -16,27 +16,54 @@ export default function AboutPage() {
             <p className="section-tag">Overview</p>
             <h2>About NTCE 2026</h2>
             <p>
-              The National Technology Conference & Exhibition (NTCE) 2026 is Bhutan&apos;s premier
-              platform for innovation, collaboration, and technological advancement in the digital
-              ecosystem. Jointly organized by Bhutan Telecom Ltd. and GovTech Agency, NTCE brings
-              together leaders from government, industry, and global technology providers to shape
-              the future of connectivity in Bhutan.
+              The National Technology Conference & Exhibition (NTCE) 2026 is Bhutan’s premier national platform dedicated 
+              to advancing digital transformation, innovation, and strategic collaboration across the country’s technology 
+              ecosystem. Jointly organized by Bhutan Telecom Limited and the GovTech Agency, NTCE reflects a shared national 
+              vision to accelerate Bhutan’s transition into a digitally empowered, innovation-driven, and knowledge-based economy.<br/><br/>
             </p>
+            
             <p>
-              Held from 15-17 May 2026 at the Royal Textile Museum, Thimphu, NTCE 2026 is centered
-              around the theme:
+              Scheduled from 15–17 May 2026 at the Royal Textile Museum, Thimphu, the conference is guided by the theme:<br/><br/>
             </p>
             <p>
               <strong>&ldquo;Driving Digital Transformation for a Sustainable Bhutan&rdquo;</strong>
             </p>
-            <p>
-              This theme reflects a national commitment to accelerating innovation and achieving a
-              10X transformation across the Royal Government of Bhutan (RGoB) and Druk Holding and
-              Investments (DHI).
-            </p>
           </div>
 
-          <h2>Our Vision</h2>
+          {/* <h2>Join Us</h2> */}
+          <p>
+            NTCE is envisioned as an annual flagship national event that will support the 
+            Royal Government of Bhutan (RGoB) and Druk Holding & Investments (DHI) in 
+            achieving their long-term economic, technological, and social development 
+            goals through digital innovation and emerging technologies.
+            The conference serves as a strategic platform that brings together government agencies, 
+            state-owned enterprises, private sector leaders, startups, entrepreneurs, academia, innovators, 
+            and international technology partners to foster collaboration, knowledge exchange, and investment 
+            opportunities. By creating meaningful engagement between policymakers, industry leaders, and technology 
+            providers, NTCE aims to accelerate Bhutan’s digital transformation journey while building a resilient, 
+            inclusive, and future-ready digital society.<br/><br/>
+
+            A key highlight of NTCE 2026 is the participation of leading international Original Equipment Manufacturers (OEMs), 
+            global technology companies, and regional innovation partners. Their participation will introduce Bhutanese entrepreneurs, 
+            startups, SMEs, and local businesses to emerging technologies, global best practices, advanced digital solutions, and new 
+            market opportunities. This engagement is expected to create valuable avenues for capacity building, technology transfer, 
+            strategic partnerships, and investment collaboration that can strengthen Bhutan’s innovation ecosystem and entrepreneurial landscape.<br/><br/>
+
+            The presence of international OEMs and technology leaders will also provide Bhutanese youth, ICT professionals, and institutions 
+            with direct exposure to cutting-edge advancements in areas such as artificial intelligence, cybersecurity, cloud computing, digital
+            infrastructure, fintech, smart governance, IoT, and sustainable technologies. Such interactions will help nurture local talent, inspire 
+            innovation, and enable Bhutanese enterprises to better integrate into regional and global digital economies.<br/><br/>
+
+            NTCE also represents Bhutan’s strong commitment to embracing modern digital infrastructure and emerging technologies as critical 
+            enablers of sustainable economic growth, efficient public service delivery, digital inclusion, entrepreneurship development, and 
+            national competitiveness. Through this initiative, Bhutan Telecom and the GovTech Agency seek to position Bhutan as a progressive
+            digital nation that leverages technology and innovation to create opportunities for its people while strengthening the country’s 
+            digital ecosystem.<br/><br/>
+            As a long-term national initiative, NTCE will continue to play a vital role in supporting Bhutan’s broader vision of building a 
+            smart, connected, innovative, and sustainable future aligned with the aspirations of the RGoB and DHI.
+          </p>
+
+          {/* <h2>Our Vision</h2>
           <p>NTCE 2026 aims to serve as a strategic national platform to:</p>
           <ul className="footer-links">
             <li>Showcase cutting-edge technologies shaping the future</li>
@@ -131,7 +158,7 @@ export default function AboutPage() {
             NTCE 2026 invites stakeholders, innovators, and leaders to be part of this
             transformative journey. Together, we can drive meaningful change and build a
             sustainable, connected, and digitally empowered Bhutan.
-          </p>
+          </p> */}
         </section>
       </main>
       <Footer />

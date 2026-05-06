@@ -1,8 +1,8 @@
 import { handlePostRegistration } from "../../../lib/server/controllers/registrationController";
 import { emptyWithCors } from "../../../lib/server/http/apiResponse";
 
-/** Must stay dynamic for form submissions at runtime. */
-export const dynamic = "force-dynamic";
+/** Export-safe for cPanel static build. */
+export const dynamic = "force-static";
 
 export async function OPTIONS(request) {
   return emptyWithCors(request);

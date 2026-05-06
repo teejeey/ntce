@@ -18,11 +18,12 @@ Use this to store registration submissions and serve schedule, events, and speak
   - `message`
   - `Timestamp`
 
-- Create 3 more sheet tabs for schedule data:
-  - `Day 1`
-  - `Day 2`
-  - `Day 3`
-- Add these headers in row 1 for each day tab:
+- Create **4** sheet tabs for schedule data (recommended names — script matches loosely):
+  - `Day 1` → JSON `day1` → Opening Ceremony on `/schedule`
+  - `Conference Day 1` → JSON `day2` → Conference Day 1 tab
+  - `Conference Day 2` → JSON `day4` → Conference Day 2 tab
+  - `Day 3` → JSON `day3` → WTISD tab on `/schedule`
+- Add these headers in row 1 for **each** schedule day tab (`Day 1`, `Conference Day 1`, `Conference Day 2`, `Day 3`):
   - `id`
   - `time_slot`
   - `description`
@@ -62,8 +63,9 @@ function doGet(e) {
         success: true,
         data: {
           day1: readScheduleSheet_("Day 1"),
-          day2: readScheduleSheet_("Day 2"),
-          day3: readScheduleSheet_("Day 3")
+          day2: readScheduleSheet_("Conference Day 1"),
+          day3: readScheduleSheet_("Day 3"),
+          day4: readScheduleSheet_("Conference Day 2")
         }
       });
     }
@@ -144,28 +146,60 @@ function doPost(e) {
   }
 }
 
-function readScheduleSheet_(sheetName) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+function normalizeSheetTitle_(s) {
+  return String(s || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function getSheetByNameLoose_(name) {
+  if (!name) return null;
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var exact = ss.getSheetByName(name);
+  if (exact) return exact;
+  var want = normalizeSheetTitle_(name);
+  var sheets = ss.getSheets();
+  for (var i = 0; i < sheets.length; i++) {
+    var sh = sheets[i];
+    if (normalizeSheetTitle_(sh.getName()) === want) return sh;
+  }
+  return null;
+}
+
+function readScheduleSheetFromSheet_(sheet) {
   if (!sheet) return [];
-
-  const dataRange = sheet.getDataRange();
-  const rawRows = dataRange.getValues();
-  const displayRows = dataRange.getDisplayValues();
+  var dataRange = sheet.getDataRange();
+  var rawRows = dataRange.getValues();
+  var displayRows = dataRange.getDisplayValues();
   if (displayRows.length < 2) return [];
-
-  const headers = rawRows[0];
-  const normalized = headers.map((h) => String(h).trim());
-
+  var headers = rawRows[0];
+  var normalized = headers.map(function (h) {
+    return String(h).trim();
+  });
   return displayRows
     .slice(1)
-    .filter((row) => row.some((cell) => String(cell).trim() !== ""))
-    .map((row) => {
-    const obj = {};
-    normalized.forEach((key, idx) => {
-      obj[key] = String(row[idx] ?? "").trim();
+    .filter(function (row) {
+      return row.some(function (cell) {
+        return String(cell).trim() !== "";
+      });
+    })
+    .map(function (row) {
+      var obj = {};
+      normalized.forEach(function (key, idx) {
+        obj[key] = String(row[idx] ?? "").trim();
+      });
+      return obj;
     });
-    return obj;
-  });
+}
+
+function readScheduleSheet_(sheetName) {
+  return readScheduleSheetFromSheet_(getSheetByNameLoose_(sheetName));
+}
+
+function readScheduleSheetFirstFound_(candidateNames) {
+  for (var i = 0; i < candidateNames.length; i++) {
+    var sheet = getSheetByNameLoose_(candidateNames[i]);
+    if (sheet) return readScheduleSheetFromSheet_(sheet);
+  }
+  return [];
 }
 
 function emailExists_(sheetName, emailHeader, normalizedEmail) {
@@ -225,11 +259,23 @@ GAS_WEB_APP_URL="PASTE_YOUR_WEB_APP_EXEC_URL_HERE"
 
 - Open this in browser after deployment:
   - `YOUR_EXEC_URL?action=schedule`
-- Confirm JSON contains:
-  - `data.day1`
-  - `data.day2`
-  - `data.day3`
-- Open `/schedule` in your app and verify tabs show sheet data.
+- Confirm JSON contains arrays:
+  - `data.day1` — sheet **Day 1** (Opening Ceremony tab)
+  - `data.day2` — sheet **Conference Day 1**
+  - `data.day3` — sheet **Day 3** (WTISD tab)
+  - `data.day4` — sheet **Conference Day 2** (empty `[]` if the tab is missing or only has a header row)
+- Open `/schedule` and verify each tab shows the matching sheet.
+
+**Quick mapping**
+
+| Google Sheet tab       | JSON key | Schedule page tab        |
+|------------------------|----------|---------------------------|
+| Day 1                  | `day1`   | Opening Ceremony        |
+| **Conference Day 1** | `day2` | Conference Day 1 |
+| **Conference Day 2** | `day4` | Conference Day 2 |
+| Day 3                  | `day3`   | WTISD                    |
+
+**Conference Day 2 tab empty?** Paste **`google-apps-script/Code.gs`** into Apps Script, redeploy the web app, open **`YOUR_EXEC_URL?action=schedule`** and check **`data.day4`**. Tab matching ignores extra spaces and letter case. Restart your Next.js host so schedule isn’t served from an old cached payload (`schedule-page:v4` cache bump).
 
 ## 7) Test events API
 
