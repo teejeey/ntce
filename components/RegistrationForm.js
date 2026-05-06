@@ -1,16 +1,22 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  checkEmailExistsViaGas,
-  submitRegistrationViaGas,
-} from "../lib/gasWebApp";
+import { checkEmailExistsViaGas, submitRegistrationViaGas } from "../lib/gasWebApp";
 import { REGISTRATION_ATTENDANCE_OPTIONS } from "../lib/registrationAttendanceOptions";
 import { COMPLETE_EMAIL_PATTERN } from "../lib/emailPatterns";
 import { REGISTRATION_TOPIC_OPTIONS } from "../lib/registrationTopicOptions";
+import RegistrationPreviewModal from "./registration/RegistrationPreviewModal";
+import RegistrationSuccessModal from "./registration/RegistrationSuccessModal";
 
 function isCompleteEmail(value) {
   return COMPLETE_EMAIL_PATTERN.test(String(value || "").trim());
+}
+
+function createRequestId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `req-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 const initialForm = {
@@ -31,6 +37,7 @@ export default function RegistrationForm() {
   const [showPreview, setShowPreview] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [emailCheck, setEmailCheck] = useState({ checking: false, error: "" });
+  const [requestId, setRequestId] = useState(() => createRequestId());
   const abortRef = useRef(null);
   const latestTrimmedEmailRef = useRef("");
 
@@ -71,13 +78,8 @@ export default function RegistrationForm() {
 
     try {
       const result = await checkEmailExistsViaGas(email, { signal: ac.signal });
-
       if (ac.signal.aborted) return;
-
-      if (!result.ok) {
-        throw new Error(result.error || "Could not verify email.");
-      }
-
+      if (!result.ok) throw new Error(result.error || "Could not verify email.");
       if (latestTrimmedEmailRef.current !== email) return;
 
       if (result.exists === true) {
@@ -89,21 +91,13 @@ export default function RegistrationForm() {
     } catch (error) {
       if (error.name === "AbortError") return;
       if (latestTrimmedEmailRef.current !== email) return;
-      // Transient upstream/network issues should not block form submission.
       setEmailCheck({ checking: false, error: "" });
     }
   }, []);
 
   useEffect(() => {
     const trimmed = String(formData.email || "").trim();
-
-    if (!trimmed) {
-      abortRef.current?.abort();
-      setEmailCheck({ checking: false, error: "" });
-      return;
-    }
-
-    if (!isCompleteEmail(trimmed)) {
+    if (!trimmed || !isCompleteEmail(trimmed)) {
       abortRef.current?.abort();
       setEmailCheck({ checking: false, error: "" });
       return;
@@ -138,6 +132,13 @@ export default function RegistrationForm() {
       });
       return;
     }
+    if (emailTrimmed && !isCompleteEmail(emailTrimmed)) {
+      setStatus({
+        type: "error",
+        message: "Please enter a valid email address.",
+      });
+      return;
+    }
     if (emailCheck.checking || emailCheck.error) {
       if (emailCheck.error) setStatus({ type: "error", message: emailCheck.error });
       return;
@@ -153,6 +154,8 @@ export default function RegistrationForm() {
     try {
       const result = await submitRegistrationViaGas({
         ...formData,
+        requestId,
+        website: "",
         topicInterest:
           formData.attendance === "Selected Session"
             ? formData.topicInterest
@@ -165,7 +168,7 @@ export default function RegistrationForm() {
 
       setStatus({ type: "", message: "" });
       setFormData(initialForm);
-      setEmailCheck({ checking: false, error: "" });
+      setRequestId(createRequestId());
       setShowPreview(false);
       setShowSuccessModal(true);
     } catch (error) {
@@ -178,12 +181,11 @@ export default function RegistrationForm() {
     }
   }
 
-  const submitDisabled =
-    submitting || emailCheck.checking || Boolean(emailCheck.error);
+  const submitDisabled = submitting || emailCheck.checking || Boolean(emailCheck.error);
   const submitHoverTitle = submitDisabled
     ? emailCheck.checking
-      ? "Verifying your email…"
-      : emailCheck.error || "Please wait…"
+      ? "Verifying your email..."
+      : emailCheck.error || "Please wait..."
     : "";
 
   return (
@@ -213,10 +215,7 @@ export default function RegistrationForm() {
         />
         {emailCheck.checking ? <small className="field-note">Checking email...</small> : null}
         {emailCheck.error ? <small className="field-error">{emailCheck.error}</small> : null}
-        {!emailCheck.checking &&
-        !emailCheck.error &&
-        emailTrimmed &&
-        !isCompleteEmail(emailTrimmed) ? (
+        {!emailCheck.checking && !emailCheck.error && emailTrimmed && !isCompleteEmail(emailTrimmed) ? (
           <small className="field-note">
             Finish a complete email address; we verify it automatically.
           </small>
@@ -302,6 +301,16 @@ export default function RegistrationForm() {
           onChange={onChange}
         />
       </label>
+      <input
+        type="text"
+        name="website"
+        autoComplete="off"
+        tabIndex={-1}
+        aria-hidden="true"
+        value=""
+        onChange={() => {}}
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+      />
 
       {status.message ? (
         <p className={`form-status ${status.type === "error" ? "error" : "success"}`}>
@@ -330,132 +339,18 @@ export default function RegistrationForm() {
       ) : null}
       </form>
 
-      {showPreview ? (
-        <div
-          className="preview-modal-backdrop"
-          role="presentation"
-          onClick={(event) => {
-            if (submitting) return;
-            if (event.target === event.currentTarget) setShowPreview(false);
-          }}
-        >
-          <div
-            className="preview-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="preview-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <header className="preview-modal-header">
-              <p id="preview-title" className="section-tag preview-modal-title">
-                Preview your details
-              </p>
-              <button
-                type="button"
-                className="preview-modal-close"
-                onClick={() => setShowPreview(false)}
-                disabled={submitting}
-                aria-label="Close preview"
-              >
-                ×
-              </button>
-            </header>
-            <div className="form-preview-grid">
-              <p>
-                <strong>Full Name:</strong> {formData.fullName}
-              </p>
-              <p>
-                <strong>Email:</strong> {formData.email}
-              </p>
-              <p>
-                <strong>Mobile Number:</strong> {formData.mobileNumber}
-              </p>
-              <p>
-                <strong>Organization:</strong> {formData.organization}
-              </p>
-              <p>
-                <strong>Designation:</strong> {formData.designation}
-              </p>
-              <p>
-                <strong>Attendance:</strong> {formData.attendance}
-              </p>
-              <p>
-                <strong>Topic Interest:</strong>{" "}
-                {formData.attendance === "Selected Session" &&
-                formData.topicInterest.length > 0 ? (
-                  <>
-                    <br />
-                    <ol>
-                      {formData.topicInterest.map((topic, index) => (
-                        <li key={`${topic}-${index}`}>{topic}</li>
-                      ))}
-                    </ol>
-                  </>
-                ) : (
-                  "-"
-                )}
-              </p>
-              <p>
-                <strong>Message:</strong> {formData.message || "-"}
-              </p>
-            </div>
-            <div className="form-preview-actions">
-              <button
-                type="button"
-                className="btn btn-outline-dark"
-                onClick={() => setShowPreview(false)}
-                disabled={submitting}
-              >
-                Edit Details
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={confirmSubmit}
-                disabled={submitting}
-              >
-                {submitting ? "Submitting..." : "Yes, Submit"}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <RegistrationPreviewModal
+        open={showPreview}
+        formData={formData}
+        submitting={submitting}
+        onClose={() => setShowPreview(false)}
+        onConfirm={confirmSubmit}
+      />
 
-      {showSuccessModal ? (
-        <div
-          className="preview-modal-backdrop"
-          role="presentation"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) setShowSuccessModal(false);
-          }}
-        >
-          <div
-            className="preview-modal registration-success-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="registration-success-title"
-          >
-            <p id="registration-success-title" className="section-tag">
-              Thank you
-            </p>
-            <p className="success-modal-heading">
-              <strong>Your registration is successful!</strong>
-            </p>
-            <p className="success-modal-text">
-              You will receive a confirmation email with all event details prior to the event.
-            </p>
-            <div className="form-preview-actions">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => setShowSuccessModal(false)}
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <RegistrationSuccessModal
+        open={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </>
   );
 }

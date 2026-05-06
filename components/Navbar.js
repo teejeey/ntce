@@ -49,11 +49,9 @@ export default function Navbar() {
 
   useEffect(() => {
     for (const href of PREFETCH_HREFS) {
-      try {
-        router.prefetch(href);
-      } catch {
-        // ignore prefetch failures (e.g. during tests)
-      }
+      Promise.resolve(router.prefetch(href)).catch(() => {
+        // Ignore async prefetch failures (e.g. transient network/CORS in dev).
+      });
     }
   }, [router]);
 

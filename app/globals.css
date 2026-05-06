@@ -1908,25 +1908,26 @@ h2 {
     width: 100%;
     margin-top: 0.75rem;
     padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(30, 41, 59, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 10px;
     flex-direction: column;
     gap: 0.3rem;
     position: relative;
     z-index: 5;
-    color: #0f172a;
+    color: #ffffff;
   }
 
   .nav-links a,
   .nav-links .nav-dropdown-toggle,
   .nav-links .nav-dropdown-item {
-    color: #0f172a;
+    color: #ffffff;
   }
 
   .nav-links > li {
-    border: 1px solid rgba(15, 23, 42, 0.16);
+    border: 1px solid rgba(148, 163, 184, 0.28);
     border-radius: 10px;
-    background: #ffffff;
+    background: rgba(51, 65, 85, 0.78);
   }
 
   .nav-links > li > a,
@@ -1940,7 +1941,7 @@ h2 {
   .nav-links a.active,
   .nav-links .nav-dropdown-toggle.active,
   .nav-links .nav-dropdown-item.active {
-    color: #0f172a;
+    color: #ffffff;
   }
 
   .nav-dropdown {

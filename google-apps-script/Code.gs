@@ -84,6 +84,7 @@ function doPost(e) {
     const topicInterest = data.Topic_interest || "";
     const topicInterestArray = data.Topic_interest_array || "[]";
     const message = data.message || "";
+    const normalizedEmail = String(email || "").trim().toLowerCase();
 
     if (!fullName || !email || !mobileNumber || !organization || !designation || !attendance) {
       return jsonResponse({
@@ -93,18 +94,32 @@ function doPost(e) {
       });
     }
 
-    sheet.appendRow([
-      fullName,
-      email,
-      mobileNumber,
-      organization,
-      designation,
-      attendance,
-      topicInterest,
-      topicInterestArray,
-      message,
-      new Date(),
-    ]);
+    const lock = LockService.getScriptLock();
+    lock.waitLock(30000);
+    try {
+      if (normalizedEmail && emailExists_("Registrations", "Email", normalizedEmail)) {
+        return jsonResponse({
+          success: false,
+          code: "DUPLICATE_EMAIL",
+          error: "This email is already registered.",
+        });
+      }
+
+      sheet.appendRow([
+        fullName,
+        email,
+        mobileNumber,
+        organization,
+        designation,
+        attendance,
+        topicInterest,
+        topicInterestArray,
+        message,
+        new Date(),
+      ]);
+    } finally {
+      lock.releaseLock();
+    }
 
     var adminEmailSent = false;
     var adminEmailError = "";
@@ -158,7 +173,7 @@ function doPost(e) {
       success: true,
       email: {
         adminEmailSent: adminEmailSent,
-        adminEmailError: adminEmailError,
+        adminEmailError: adminEmailSent ? "" : "Admin notification failed.",
       },
     });
   } catch (err) {
