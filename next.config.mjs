@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
-const isStaticExport = process.env.NEXT_EXPORT === "1";
+const isRenderBuild =
+  String(process.env.RENDER || "").toLowerCase() === "true" ||
+  Boolean(process.env.RENDER_SERVICE_ID);
+const isStaticExport = process.env.NEXT_EXPORT === "1" && !isRenderBuild;
 const remoteApiBase = String(process.env.NEXT_PUBLIC_API_BASE_URL || "").trim().replace(/\/+$/, "");
 
 const nextConfig = {
