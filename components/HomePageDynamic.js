@@ -63,7 +63,7 @@ export default function HomePageDynamic() {
           day: "Day 01",
           date: "15th May, 2026",
           title:
-            "Inauguration, Opening Ceremony & Launch of Exhibition and Conference",
+            "Opening Ceremony & Launch of Exhibition and Conference",
           timeRange: getDayTimeRange(scheduleData.day1),
         },
         {
@@ -77,7 +77,7 @@ export default function HomePageDynamic() {
           day: "Day 03",
           date: "17th May, 2026",
           title:
-            "World Telecommunication and Information Society Day (WTISD) Celebration, Awards & Closing Ceremony",
+            "World Telecommunication and Information Society Day (WTISD) Celebration & Closing Ceremony",
           timeRange: getDayTimeRange(scheduleData.day3),
         },
       ];
@@ -149,19 +149,26 @@ export default function HomePageDynamic() {
             <p className="section-tag">Schedule</p>
             <h2>Event Schedule</h2>
           </div>
-          <div className="schedule-cards">
-            {scheduleCards.map((item) => (
-              <article className="schedule-card" key={item.day}>
-                <div className="day">
-                  <strong>{item.day}</strong>
-                  <span>{item.date}</span>
-                </div>
-                <div className="details">
-                  <h3>{item.title}</h3>
-                  <p>{item.timeRange || ""}</p>
-                </div>
-              </article>
-            ))}
+          <div className="home-schedule-column">
+            <div className="schedule-cards">
+              {scheduleCards.map((item) => (
+                <article className="schedule-card" key={item.day}>
+                  <div className="day">
+                    <strong>{item.day}</strong>
+                    <span>{item.date}</span>
+                  </div>
+                  <div className="details">
+                    <h3>{item.title}</h3>
+                    <p>{item.timeRange || ""}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <div className="section-cta">
+              <Link className="btn btn-outline-dark" href="/schedule">
+                View More Details
+              </Link>
+            </div>
           </div>
         </div>
       </section>

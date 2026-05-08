@@ -72,47 +72,56 @@ const PROGRAMME_EXHIBITIONS = [
     slNo: 1,
     organization: "Ericsson",
     showcasePoints: [
-      "Real-Life Digital Twin",
-      "Smart Devices Transforming Daily Lives",
-      "Photorealistic Holograms (including Smart Glasses)",
+      {
+        text: "Real-Life Digital Twin",
+        videoUrl: "https://youtu.be/XfS4LiJcgJo?si=6H1bXlJbWUJKlVQp",
+      },
+      { text: "Smart Devices Transforming Daily Lives", videoUrl: "" },
+      { text: "Photorealistic Holograms (including Smart Glasses)", videoUrl: "" },
     ],
   },
   {
     slNo: 2,
     organization: "Nokia",
     showcasePoints: [
-      "Trustworthy Networks for Mission-Critical Applications in Public Safety and Disaster Management",
-      "Adaptive Grid / Utility Communications Network for Bhutan",
-      "Quantum-Safe Networks: Secure Foundation for Digital Bhutan Initiatives",
+      {
+        text: "Trustworthy Networks for Mission-Critical Applications in Public Safety and Disaster Management",
+        videoUrl: "https://youtu.be/yVx4sGpJ6nw",
+      },
+      { text: "Adaptive Grid / Utility Communications Network for Bhutan", videoUrl: "" },
+      { text: "Quantum-Safe Networks: Secure Foundation for Digital Bhutan Initiatives", videoUrl: "" },
     ],
   },
   {
     slNo: 3,
     organization: "Cisco",
-    showcasePoints: ["Accelerated AI Deployments"],
+    showcasePoints: [{ text: "Accelerated AI Deployments", videoUrl: "" }],
   },
   {
     slNo: 4,
     organization: "Druk Holding & Investments (DHI)",
     showcasePoints: [
-      "Digital Fabrication: JNWSFL Innovation Lab",
-      "IoT & LoRaWAN: Sensing Bhutan",
-      "Artificial Intelligence: Intelligent Systems for Bhutan",
-      "Data Analytics Platform: From Data to Decisions",
+      { text: "Digital Fabrication: JNWSFL Innovation Lab", videoUrl: "" },
+      { text: "IoT & LoRaWAN: Sensing Bhutan", videoUrl: "" },
+      { text: "Artificial Intelligence: Intelligent Systems for Bhutan", videoUrl: "" },
+      { text: "Data Analytics Platform: From Data to Decisions", videoUrl: "" },
     ],
   },
   {
     slNo: 5,
     organization: "National Digital Identity (NDI)",
     showcasePoints: [
-      "Digital ID creation with features such as login, eKYC, and verifiable credentials, along with new services including digital signatures, mobile verification, offline CID card verification, and OTP-based messaging.",
+      {
+        text: "Digital ID creation with features such as login, eKYC, and verifiable credentials, along with new services including digital signatures, mobile verification, offline CID card verification, and OTP-based messaging.",
+        videoUrl: "",
+      },
     ],
   },
  
   {
     slNo: 6,
     organization: "Government Technology (GovTech)",
-    showcasePoints: ["To be Confirmed"],
+    showcasePoints: [{ text: "ePIS – The Electronic Patient Information System", videoUrl: "" }],
   },
    // {
   //   slNo: 6,
@@ -123,13 +132,68 @@ const PROGRAMME_EXHIBITIONS = [
 
 const EXHIBITIONS_TAB_ID = "exhibitions";
 
+function getYouTubeEmbedUrl(rawUrl) {
+  const value = String(rawUrl || "").trim();
+  if (!value) return "";
+  const normalizedValue =
+    value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`;
+  try {
+    const parsed = new URL(normalizedValue);
+    if (parsed.hostname.includes("youtu.be")) {
+      const id = parsed.pathname.replace(/^\/+/, "").split("/")[0];
+      return id ? `https://www.youtube.com/embed/${id}?rel=0` : "";
+    }
+    if (parsed.hostname.includes("youtube.com")) {
+      if (parsed.pathname.startsWith("/embed/")) {
+        const id = parsed.pathname.replace("/embed/", "").split("/")[0];
+        return id ? `https://www.youtube.com/embed/${id}?rel=0` : "";
+      }
+      if (parsed.pathname.startsWith("/live/")) {
+        const id = parsed.pathname.replace("/live/", "").split("/")[0];
+        return id ? `https://www.youtube.com/embed/${id}?rel=0` : "";
+      }
+      if (parsed.pathname.startsWith("/shorts/")) {
+        const id = parsed.pathname.replace("/shorts/", "").split("/")[0];
+        return id ? `https://www.youtube.com/embed/${id}?rel=0` : "";
+      }
+      const id = parsed.searchParams.get("v");
+      return id ? `https://www.youtube.com/embed/${id}?rel=0` : "";
+    }
+    return "";
+  } catch {
+    return "";
+  }
+}
+
+function getVideoOpenUrl(rawUrl) {
+  const value = String(rawUrl || "").trim();
+  if (!value) return "";
+  if (value.startsWith("http://") || value.startsWith("https://")) return value;
+  return `https://${value}`;
+}
+
+function normalizeShowcasePoint(point) {
+  if (typeof point === "string") {
+    return { text: point, videoUrl: "" };
+  }
+  if (point && typeof point === "object") {
+    return {
+      text: String(point.text || "").trim(),
+      videoUrl: String(point.videoUrl || "").trim(),
+    };
+  }
+  return { text: "", videoUrl: "" };
+}
+
 /**
  * Same layout as programme schedule cards: left column (like time slot) = company name;
  * details column = numbered showcase list. `useOuterGrid` wraps modal content in `.schedule-cards`.
  */
-function ProgrammeExhibitionsCards({ keyPrefix }) {
+function ProgrammeExhibitionsCards({ keyPrefix, onOpenVideo }) {
   const cards = PROGRAMME_EXHIBITIONS.map((row) => {
-    const points = Array.isArray(row.showcasePoints) ? row.showcasePoints : [];
+    const points = Array.isArray(row.showcasePoints)
+      ? row.showcasePoints.map(normalizeShowcasePoint).filter((p) => p.text)
+      : [];
     const single = points.length === 1;
 
     return (
@@ -144,14 +208,38 @@ function ProgrammeExhibitionsCards({ keyPrefix }) {
           {points.length === 0 ? (
             <p className="schedule-exhibition-single-demo">—</p>
           ) : single ? (
-            <p className="schedule-exhibition-single-demo">{points[0]}</p>
+            <div className="schedule-exhibition-point-row">
+              <p className="schedule-exhibition-single-demo">{points[0].text}</p>
+              {points[0].videoUrl ? (
+                <button
+                  type="button"
+                  className="btn btn-outline-dark schedule-inline-btn schedule-video-btn"
+                  onClick={() => onOpenVideo(points[0])}
+                >
+                  Watch Video
+                </button>
+              ) : null}
+            </div>
           ) : (
             <ol
               className="schedule-exhibition-showcase-list"
               aria-label={`Showcase topics for ${row.organization}`}
             >
               {points.map((point, index) => (
-                <li key={`${keyPrefix}-${row.slNo}-${index}`}>{point}</li>
+                <li key={`${keyPrefix}-${row.slNo}-${index}`}>
+                  <div className="schedule-exhibition-point-row">
+                    <span>{point.text}</span>
+                    {point.videoUrl ? (
+                      <button
+                        type="button"
+                        className="btn btn-outline-dark schedule-inline-btn schedule-video-btn"
+                        onClick={() => onOpenVideo(point)}
+                      >
+                        Watch Video
+                      </button>
+                    ) : null}
+                  </div>
+                </li>
               ))}
             </ol>
           )}
@@ -267,6 +355,7 @@ export default function SchedulePage() {
   const [reloadTick, setReloadTick] = useState(0);
   const [speakerDirectory, setSpeakerDirectory] = useState([]);
   const [activeSpeakerProfile, setActiveSpeakerProfile] = useState(null);
+  const [activeExhibitionVideo, setActiveExhibitionVideo] = useState(null);
   const tabTopRef = useRef(null);
 
   useEffect(() => {
@@ -372,6 +461,28 @@ export default function SchedulePage() {
     );
   };
 
+  const openExhibitionVideo = (point) => {
+    const openUrl = getVideoOpenUrl(point?.videoUrl);
+    const isPhoneScreen =
+      typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+    if (isPhoneScreen && openUrl) {
+      window.open(openUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    const embedUrl = getYouTubeEmbedUrl(point?.videoUrl);
+    if (!embedUrl) {
+      if (openUrl && typeof window !== "undefined") {
+        window.open(openUrl, "_blank", "noopener,noreferrer");
+      }
+      return;
+    }
+    setActiveExhibitionVideo({
+      title: point.text || "Exhibition video",
+      embedUrl,
+    });
+  };
+
   return (
     <>
       <PageHero
@@ -466,7 +577,10 @@ export default function SchedulePage() {
                     : null}
                 </>
               ) : activeDay === EXHIBITIONS_TAB_ID ? (
-                <ProgrammeExhibitionsCards keyPrefix="schedule-tab-exhibitions" />
+                <ProgrammeExhibitionsCards
+                  keyPrefix="schedule-tab-exhibitions"
+                  onOpenVideo={openExhibitionVideo}
+                />
               ) : null}
             </div>
           </div>
@@ -522,6 +636,44 @@ export default function SchedulePage() {
                     </p>
                   </div>
                 </article>
+              </div>
+            </div>
+          </div>
+        ) : null}
+        {activeExhibitionVideo ? (
+          <div
+            className="programme-modal-overlay"
+            onClick={() => setActiveExhibitionVideo(null)}
+          >
+            <div
+              className="programme-modal programme-modal-video"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Exhibition video"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="programme-modal-head">
+                <h3>{activeExhibitionVideo.title}</h3>
+                <button
+                  type="button"
+                  className="programme-modal-close"
+                  aria-label="Close exhibition video"
+                  onClick={() => setActiveExhibitionVideo(null)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="programme-modal-body programme-modal-video-body">
+                <iframe
+                  width="800"
+                  height="450"
+                  src={activeExhibitionVideo.embedUrl}
+                  title={activeExhibitionVideo.title}
+                  className="programme-video-embed"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
               </div>
             </div>
           </div>

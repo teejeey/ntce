@@ -435,6 +435,12 @@ h2 {
   gap: 2rem;
 }
 
+.home-schedule-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .schedule-cards {
   display: grid;
   gap: 1rem;
@@ -661,6 +667,18 @@ h2 {
   line-height: 1.35;
 }
 
+.schedule-exhibition-point-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+}
+
+.schedule-video-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .schedule-speaker-profile-card {
   display: grid;
   grid-template-columns: 180px 1fr;
@@ -713,6 +731,10 @@ h2 {
   box-shadow: 0 16px 48px rgba(15, 23, 42, 0.26);
 }
 
+.programme-modal-video {
+  width: min(860px, 96vw);
+}
+
 .programme-modal-head {
   display: flex;
   justify-content: space-between;
@@ -747,6 +769,29 @@ h2 {
   max-height: calc(86vh - 108px);
   overflow: auto;
   padding: 0.7rem 1rem 1rem;
+}
+
+.programme-modal-video-body {
+  padding: 0.7rem;
+}
+
+.programme-video-embed {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .programme-modal-video {
+    width: 96vw;
+  }
+  .programme-modal-video-body {
+    padding: 0.6rem;
+  }
 }
 
 .speakers {
@@ -1975,6 +2020,28 @@ h2 {
 }
 
 @media (max-width: 640px) {
+  .schedule-card.schedule-exhibition-card {
+    display: block;
+  }
+
+  .schedule-card.schedule-exhibition-card .day {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    margin-bottom: 0.45rem;
+    text-align: left;
+  }
+
+  .schedule-exhibition-showcase-list {
+    padding-left: 1.15rem;
+  }
+
+  .schedule-exhibition-showcase-list .schedule-inline-btn,
+  .schedule-exhibition-single-demo .schedule-inline-btn {
+    display: inline-flex;
+    margin: 0.15rem 0 0;
+  }
+
   .hero {
     min-height: 66vh;
   }

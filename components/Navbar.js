@@ -29,6 +29,12 @@ const links = [
   { href: "/about", label: "About Us" },
 ];
 
+function normalizePath(path) {
+  const p = String(path || "").trim();
+  if (!p) return "/";
+  return p.length > 1 ? p.replace(/\/+$/, "") : p;
+}
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -54,6 +60,8 @@ export default function Navbar() {
       });
     }
   }, [router]);
+
+  const activePath = normalizePath(pathname);
 
   return (
     <nav
@@ -83,7 +91,7 @@ export default function Navbar() {
           <li key={item.href}>
             <Link
               href={item.href}
-              className={pathname === item.href ? "active" : ""}
+              className={activePath === normalizePath(item.href) ? "active" : ""}
               onClick={() => setOpen(false)}
             >
               {item.label}
